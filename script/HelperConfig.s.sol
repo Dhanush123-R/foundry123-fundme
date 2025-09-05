@@ -22,13 +22,11 @@ contract HelperConfig is Script {
     }
 
     constructor() {
-        if(block.chainid == 11155111){
+        if (block.chainid == 11155111) {
             activeNetworkConfig = getSepoliaEthConfig();
-        }
-        else if(block.chainid == 1){
+        } else if (block.chainid == 1) {
             activeNetworkConfig = getMainnetEthConfig();
-        }
-        else {
+        } else {
             activeNetworkConfig = getOrCreateAnivlEthConfig();
         }
     }
@@ -37,25 +35,20 @@ contract HelperConfig is Script {
     but what if we need more, like VRF Address, gas price, version
     for this we are going to create our own Types(STRUCT)
     */
-    function getSepoliaEthConfig() public pure returns(NetworkConfig memory) {
-        NetworkConfig memory sepoliaConfig = NetworkConfig({
-            priceFeed: 0x694AA1769357215DE4FAC081bf1f309aDC325306
-        });
+    function getSepoliaEthConfig() public pure returns (NetworkConfig memory) {
+        NetworkConfig memory sepoliaConfig = NetworkConfig({priceFeed: 0x694AA1769357215DE4FAC081bf1f309aDC325306});
         return sepoliaConfig;
     }
 
-    function getMainnetEthConfig() public pure returns(NetworkConfig memory) {
-        NetworkConfig memory ethConfig = NetworkConfig({
-            priceFeed: 0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419
-        });
+    function getMainnetEthConfig() public pure returns (NetworkConfig memory) {
+        NetworkConfig memory ethConfig = NetworkConfig({priceFeed: 0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419});
         return ethConfig;
     }
 
-
-    function getOrCreateAnivlEthConfig() public  returns(NetworkConfig memory) {
+    function getOrCreateAnivlEthConfig() public returns (NetworkConfig memory) {
         //PriceFeedAddress
 
-        if(activeNetworkConfig.priceFeed != address(0)){
+        if (activeNetworkConfig.priceFeed != address(0)) {
             return activeNetworkConfig;
         }
 
@@ -66,9 +59,7 @@ contract HelperConfig is Script {
         MockV3Aggregator mockPriceFeed = new MockV3Aggregator(DECIMALS, INITIAL_PRIZE);
         vm.stopBroadcast();
 
-        NetworkConfig memory anvilConfig = NetworkConfig({
-            priceFeed : address(mockPriceFeed)
-        });
+        NetworkConfig memory anvilConfig = NetworkConfig({priceFeed: address(mockPriceFeed)});
         return anvilConfig;
     }
 }
